@@ -1,5 +1,7 @@
 package util;
 
+import java.nio.ByteBuffer;
+
 /**
  * Interface contenant les constantes de l'application permettant de les
  * modifier facilement.
@@ -23,7 +25,15 @@ public interface Constantes {
 
     //Types de message
     byte NOUV_TACHE = (byte) 0;
+    byte JETON = (byte) 1;
+    byte FIN = (byte) 2;
+
 
     //Tailles des types de message
-    int TAILLE_TAMPON_NOUV_TACHE = Byte.BYTES;
+    //Un byte pour le type, un byte pour l'id du site destinataire
+    int TAILLE_TAMPON_NOUV_TACHE = Byte.BYTES + Byte.BYTES;
+    //Un byte pour le type, un byte pour l'id du site emetteur
+    int TAILLE_TAMPON_JETON = Byte.BYTES + Byte.BYTES;
+    //Un byte pour le type, un byte pour l'id du site emetteur
+    int TAILLE_TAMPON_FIN = Byte.BYTES + Byte.BYTES;
 }
