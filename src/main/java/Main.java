@@ -21,6 +21,11 @@ en cours lors d'une terminaison (si l'utilisateur termine manuellement)
 sera terminée normalement, mais n'effectuera pas de relancement de tache sur un
  autre site.
 
+ Les trois types de messages sont NOUV_TACHE, JETON et FIN.
+ Ils sont tous composés de deux bytes, taille minimale possible. Le premier
+ byte contient le type de message, le deuxième contient le destinataire pour
+ un message NOUV_TACHE, sinon l'émetteur.
+
  -------------------------------------------------------------------------------
  */
 
