@@ -3,7 +3,6 @@ package machine;
 import util.Constantes;
 
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Thread.sleep;
 
@@ -25,7 +24,8 @@ public class Tache implements Runnable {
 
     /**
      * Contructeur d'une Tache.
-     * @param fini Boolean
+     *
+     * @param fini   Boolean
      * @param parent Site
      */
     public Tache(Boolean fini, Site parent) {
@@ -37,23 +37,23 @@ public class Tache implements Runnable {
      * Boucle principale d'une Tache
      */
     public void run() {
-        while(!fini){
+        while (!fini) {
             try {
                 sleep(Constantes.MIN_TEMPS_CALCUL + GENERATEUR.nextInt(Constantes.MAX_TEMPS_CALCUL));
             } catch (InterruptedException e) {
                 System.err.println("Un thread en plein calcul à été interrompu.");
             }
-            if(!fini && GENERATEUR.nextDouble() < Constantes.PROBABILITY){
+            if (!fini && GENERATEUR.nextDouble() < Constantes.PROBABILITY) {
                 int j;
                 //Choisir un site aléatoire différent de ce site
-                do{
+                do {
                     j = GENERATEUR.nextInt(Constantes.NOMBRE_DE_SITES);
-                } while(j == parent.getId());
+                } while (j == parent.getId());
                 System.out.println("Lancement d'une tache sur le site " + j + ".");
                 parent.lancerThreadSurSite(j);
-            }else{
+            } else {
                 System.out.println("Terminaison d'une tache sur le site " + parent.getId() + ".");
-                if(parent.getTachesEnCours().decrementAndGet() == 0){
+                if (parent.getTachesEnCours().decrementAndGet() == 0) {
                     parent.envoyerJeton(parent.getId());
                 }
                 break;

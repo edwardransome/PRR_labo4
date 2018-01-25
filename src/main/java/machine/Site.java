@@ -33,13 +33,14 @@ public class Site {
 
     /**
      * Contructeur d'un site à partir d'une id et d'un port.
-     * @param id int
+     *
+     * @param id   int
      * @param port int
      */
-    public Site(int id, int port){
+    public Site(int id, int port) {
         this.id = id;
         tachesEnCours = new AtomicInteger(0);
-        try{
+        try {
             socket = new DatagramSocket(port);
         } catch (SocketException e) {
             System.err.println("Erreur lors de l'initialisation du socket du site " + id + ".");
@@ -59,10 +60,10 @@ public class Site {
      * Lance une boucle demandant la saisie utilisateur
      */
     private void bouclerDemandeSaisie() {
-        while(!quitter){
+        while (!quitter) {
             afficherChoix();
             int saisie = scanner.nextInt();
-            switch(saisie){
+            switch (saisie) {
                 case 1:
                     lancerTache();
                     break;
@@ -95,13 +96,13 @@ public class Site {
      * erreur et ne lance pas de tâche.
      */
     public void lancerTache() {
-        if(!fini){
+        if (!fini) {
             System.out.println("Lancement d'une nouvelle tache sur le site " + id + ".");
             resteInactif = false;
             tachesEnCours.incrementAndGet();
             Thread boucleTerminaison = new Thread(new Tache(fini, this));
             boucleTerminaison.start();
-        }else{
+        } else {
             System.err.println("Impossible de lancer une tache sur le site " + id + ". Il est termine.");
         }
     }
@@ -109,6 +110,7 @@ public class Site {
     /**
      * Lance une demande de lancement de tâche sur le site en paramètre. La
      * demande est envoyée au voisin mais contient l'ID du site destinataire.
+     *
      * @param i int
      */
     public void lancerThreadSurSite(int i) {
@@ -117,16 +119,17 @@ public class Site {
         tampon[1] = (byte) i;
         try {
             DatagramPacket paquet = new DatagramPacket(tampon, tampon.length,
-                InetAddress.getByName(Constantes.ADRESSES_IP[prochainSite()]), Constantes.PORTS[prochainSite()]);
+                    InetAddress.getByName(Constantes.ADRESSES_IP[prochainSite()]), Constantes.PORTS[prochainSite()]);
             socket.send(paquet);
         } catch (IOException e) {
             System.err.println("Erreur lors du lancement de la tache sur le site "
-            + i + " depuis le site " + id + ".");
+                    + i + " depuis le site " + id + ".");
         }
     }
 
     /**
      * Envoi le jeton au voisin. Contient l'emetteur du jeton (paramètre i)
+     *
      * @param i int
      */
     public void envoyerJeton(int i) {
@@ -147,6 +150,7 @@ public class Site {
 
     /**
      * Envoi le message de fin au voisin. Contient l'émetteur du message (paramètre i)
+     *
      * @param i
      */
     public void envoyerFin(int i) {
@@ -175,7 +179,7 @@ public class Site {
         return id;
     }
 
-    public int prochainSite(){
+    public int prochainSite() {
         return (id + 1) % Constantes.NOMBRE_DE_SITES;
     }
 

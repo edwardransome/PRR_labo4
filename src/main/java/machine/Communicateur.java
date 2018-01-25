@@ -17,6 +17,7 @@ public class Communicateur implements Runnable {
 
     /**
      * Constructeur d'un communicateur prenant en paramètre un site
+     *
      * @param site
      */
     public Communicateur(Site site) {
@@ -30,7 +31,7 @@ public class Communicateur implements Runnable {
      */
     @Override
     public void run() {
-        while(!socket.isClosed()){
+        while (!socket.isClosed()) {
             byte[] tampon = new byte[Constantes.TAILLE_TAMPON_NOUV_TACHE];
             DatagramPacket paquet = new DatagramPacket(tampon, tampon.length);
             try {
@@ -41,32 +42,32 @@ public class Communicateur implements Runnable {
             }
             byte typeMessage = paquet.getData()[0];
             int idSiteEmetteur = paquet.getData()[1];
-            if(typeMessage == Constantes.NOUV_TACHE){
+            if (typeMessage == Constantes.NOUV_TACHE) {
                 int idSiteDestinataire = paquet.getData()[1];
-                if(idSiteDestinataire == site.getId()){
+                if (idSiteDestinataire == site.getId()) {
                     System.out.println("Ce site a reçu une demande de lancement de tache!");
                     site.lancerTache();
                 } else {
                     //Le message n'est pas pour nous, le renvoyer plus loin
                     site.lancerThreadSurSite(idSiteDestinataire);
                 }
-            } else if (typeMessage == Constantes.JETON){
-                if(site.getId() == idSiteEmetteur){
+            } else if (typeMessage == Constantes.JETON) {
+                if (site.getId() == idSiteEmetteur) {
                     //On a recu notre propre jeton
-                    if(site.getResteInactif()){
+                    if (site.getResteInactif()) {
                         //On est resté inactif depuis l'envoi du jeton
                         site.setFini(true);
                         site.envoyerFin(site.getId());
                     } else {
-                        if(site.getTachesEnCours().intValue() == 0){
+                        if (site.getTachesEnCours().intValue() == 0) {
                             site.envoyerJeton(site.getId());
                         }
                     }
-                }else{
+                } else {
 
                 }
             } else { //C'est un message END
-                if(idSiteEmetteur != site.getId()){
+                if (idSiteEmetteur != site.getId()) {
                     site.envoyerFin(idSiteEmetteur);
                 }
             }
